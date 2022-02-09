@@ -67,6 +67,7 @@ dependencies {
 
     with(Deps.Ktor) {
         implementation(client)
+        implementation(clientSerialization)
         implementation(engineCio)
     }
 }
