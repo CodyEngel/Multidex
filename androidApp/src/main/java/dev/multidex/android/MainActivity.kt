@@ -47,11 +47,12 @@ class MainActivity : ComponentActivity() {
             setContent {
                 LazyColumn {
                     items(response) { pokemon ->
+                        val types = pokemon.types.map { PokemonType.from(it) }
                         PokedexItem(
                             image = pokemon.sprites.other.officialArtwork.frontDefault,
                             name = pokemon.name,
                             entry = pokemon.order,
-                            types = listOf(PokemonType.GRASS)
+                            types = types
                         )
                     }
                 }
@@ -103,6 +104,7 @@ data class Pokemon(
     val name: String,
     val order: Int, // entry
     val sprites: Sprites,
+    val types: List<PokemonTypeJson>,
     val weight: Int
 )
 
@@ -111,6 +113,18 @@ fun Sprites.asList(): List<Sprite> {
         Sprite.Other.OfficialArtwork.FrontDefault(other.officialArtwork.frontDefault)
     return listOf(officialArtWorkFrontDefault)
 }
+
+@Serializable
+data class PokemonTypeJson(
+    val slot: Int,
+    val type: PokemonTypeDetailsJson
+)
+
+@Serializable
+data class PokemonTypeDetailsJson(
+    val name: String,
+    val url: String
+)
 
 @Serializable
 data class Sprites(
@@ -145,10 +159,24 @@ sealed class Sprite {
 }
 
 enum class PokemonType(val text: String, val color: Int) {
+    // TODO: add all of the types available
     GRASS(
         text = "Grass",
         color = R.color.teal_700
-    ) // teal is close enough for now, will import more colors later
+    ),
+    UNKNOWN(
+        text = "Unknown",
+        color = R.color.black
+    );
+
+    companion object {
+        fun from(json: PokemonTypeJson): PokemonType {
+            return when (json.type.name) {
+                "grass" -> GRASS
+                else -> UNKNOWN
+            }
+        }
+    }
 }
 
 @Composable
