@@ -1,12 +1,11 @@
 package dev.multidex.android
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -15,11 +14,12 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.lifecycleScope
+import coil.compose.rememberImagePainter
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.json.*
@@ -48,7 +48,7 @@ class MainActivity : ComponentActivity() {
                 LazyColumn {
                     items(response) { pokemon ->
                         PokedexItem(
-                            image = R.drawable.ic_launcher_foreground,
+                            image = pokemon.sprites.other.officialArtwork.frontDefault,
                             name = pokemon.name,
                             entry = pokemon.order,
                             types = listOf(PokemonType.GRASS)
@@ -61,15 +61,19 @@ class MainActivity : ComponentActivity() {
 }
 
 private suspend fun HttpClient.downloadPokemon(): List<Pokemon> {
-    // TODO: add logging
+    val networkTag = "Network"
+    val pokemonToRetrieveRequest = "https://pokeapi.co/api/v2/pokemon/?limit=10"
+    Log.d(networkTag, "request: $pokemonToRetrieveRequest")
     val pokemonToRetrieve =
-        get<AbbreviatedPokemonResults>(urlString = "https://pokeapi.co/api/v2/pokemon")
-    val requests = pokemonToRetrieve.results.map {
+        get<AbbreviatedPokemonResults>(urlString = pokemonToRetrieveRequest)
+    Log.d(networkTag, "result: $pokemonToRetrieve")
+    val requests = pokemonToRetrieve.results.map { abbreviatedPokemon ->
         coroutineScope {
             async {
+                Log.d(networkTag, "request: ${abbreviatedPokemon.url}")
                 get<Pokemon>(
-                    it.url
-                )
+                    abbreviatedPokemon.url
+                ).also { Log.d(networkTag, "result: $it") }
             }
         }
     }
@@ -149,16 +153,23 @@ enum class PokemonType(val text: String, val color: Int) {
 
 @Composable
 fun PokedexItem(
-    image: Int,
+    image: String,
     name: String,
     entry: Int,
     types: List<PokemonType>
 ) {
-    Card {
+    Card(
+        shape = RoundedCornerShape(size = 4.dp),
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp, horizontal = 16.dp)
+            .shadow(elevation = 4.dp, RoundedCornerShape(size = 4.dp)),
+    ) {
         Row {
             Image(
-                painter = painterResource(id = image),
-                contentDescription = null
+                painter = rememberImagePainter(data = image),
+                contentDescription = null,
+                modifier = Modifier.size(128.dp)
             )
             Column {
                 Text(text = name)
@@ -187,7 +198,7 @@ fun Chip(text: String, color: Int) {
 @Composable
 fun PokedexPreview() {
     PokedexItem(
-        image = R.drawable.ic_launcher_foreground,
+        image = "https://www.example.com/image.jpg",
         name = "Bulbasaur",
         entry = 1,
         types = listOf(PokemonType.GRASS)

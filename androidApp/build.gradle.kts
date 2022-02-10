@@ -54,6 +54,11 @@ dependencies {
         implementation(appCompat)
     }
 
+    with(Deps.Coil) {
+        implementation(core)
+        implementation(compose)
+    }
+
     with(Deps.Compose) {
         implementation(foundation)
         implementation(icons)

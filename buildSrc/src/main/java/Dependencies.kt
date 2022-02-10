@@ -4,6 +4,7 @@ object Versions {
     const val androidMinSdk = 23
     const val androidTargetSdk = androidCompileSdk
     const val appCompat = "1.4.1"
+    const val coil = "1.4.0"
     const val compose = "1.1.0-rc01"
     const val composeCompiler = "1.1.0-rc02"
 
@@ -20,6 +21,11 @@ object Deps {
     object Android {
         const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
         const val activityCompose = "androidx.activity:activity-compose:${Versions.activityCompose}"
+    }
+
+    object Coil {
+        const val core = "io.coil-kt:coil:${Versions.coil}"
+        const val compose = "io.coil-kt:coil-compose:${Versions.coil}"
     }
 
     object Compose {
