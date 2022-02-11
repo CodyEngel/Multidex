@@ -15,9 +15,10 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
 import coil.compose.rememberImagePainter
 import io.ktor.client.*
@@ -29,6 +30,7 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
+import java.util.*
 
 class MainActivity : ComponentActivity() {
     private val client = HttpClient(CIO) {
@@ -50,7 +52,7 @@ class MainActivity : ComponentActivity() {
                         val types = pokemon.types.map { PokemonType.from(it) }
                         PokedexItem(
                             image = pokemon.sprites.other.officialArtwork.frontDefault,
-                            name = pokemon.name,
+                            name = pokemon.name.replaceFirstChar { it.uppercase(Locale.US) },
                             entry = pokemon.order,
                             types = types
                         )
@@ -158,22 +160,116 @@ sealed class Sprite {
     }
 }
 
-enum class PokemonType(val text: String, val color: Int) {
-    // TODO: add all of the types available
+enum class PokemonType(val text: String, val colorHex: String) {
+    NORMAL(
+        text = "Normal",
+        colorHex = "#A8A77A"
+    ),
+    FIGHTING(
+        text = "Fighting",
+        colorHex = "#C22E28"
+    ),
+    FLYING(
+        text = "Flying",
+        colorHex = "#A98FF3"
+    ),
+    POISON(
+        text = "Poison",
+        colorHex = "#A33EA1"
+    ),
+    GROUND(
+        text = "Ground",
+        colorHex = "#E2BF65"
+    ),
+    ROCK(
+        text = "Rock",
+        colorHex = "#B6A136"
+    ),
+    BUG(
+        text = "Bug",
+        colorHex = "#A6B91A"
+    ),
+    GHOST(
+        text = "Ghost",
+        colorHex = "#735797"
+    ),
+    STEEL(
+        text = "Normal",
+        colorHex = "#B7B7CE"
+    ),
+    FIRE(
+        text = "Fire",
+        colorHex = "#EE8130"
+    ),
+    WATER(
+        text = "Water",
+        colorHex = "#6390F0"
+    ),
     GRASS(
         text = "Grass",
-        color = R.color.teal_700
+        colorHex = "#7AC74C"
+    ),
+    ELECTRIC(
+        text = "Electric",
+        colorHex = "#F7D02C"
+    ),
+    PSYCHIC(
+        text = "Psychic",
+        colorHex = "#F95587"
+    ),
+    ICE(
+        text = "Ice",
+        colorHex = "#96D9D6"
+    ),
+    DRAGON(
+        text = "Dragon",
+        colorHex = "#6F35FC"
+    ),
+    DARK(
+        text = "Dark",
+        colorHex = "#705746"
+    ),
+    FAIRY(
+        text = "Fairy",
+        colorHex = "#D685AD"
     ),
     UNKNOWN(
         text = "Unknown",
-        color = R.color.black
+        colorHex = "#000000"
+    ),
+    SHADOW(
+        text = "Shadow",
+        colorHex = "#222222"
+    ),
+    NOT_FOUND(
+        text = "Not Found",
+        colorHex = "#000000"
     );
 
     companion object {
         fun from(json: PokemonTypeJson): PokemonType {
-            return when (json.type.name) {
+            return when (json.type.name.lowercase(Locale.US)) {
+                "normal" -> NORMAL
+                "fighting" -> FIGHTING
+                "flying" -> FLYING
+                "poison" -> POISON
+                "ground" -> GROUND
+                "rock" -> ROCK
+                "bug" -> BUG
+                "ghost" -> GHOST
+                "steel" -> STEEL
+                "fire" -> FIRE
+                "water" -> WATER
                 "grass" -> GRASS
-                else -> UNKNOWN
+                "electric" -> ELECTRIC
+                "psychic" -> PSYCHIC
+                "ice" -> ICE
+                "dragon" -> DRAGON
+                "dark" -> DARK
+                "fairy" -> FAIRY
+                "unknown" -> UNKNOWN
+                "shadow" -> SHADOW
+                else -> NOT_FOUND
             }
         }
     }
@@ -203,7 +299,7 @@ fun PokedexItem(
                 Text(text = name)
                 Text(text = "#${entry}")
                 Row {
-                    types.forEach { Chip(text = it.text, color = it.color) }
+                    types.forEach { Chip(text = it.text, colorHex = it.colorHex) }
                 }
             }
         }
@@ -211,14 +307,17 @@ fun PokedexItem(
 }
 
 @Composable
-fun Chip(text: String, color: Int) {
+fun Chip(text: String, colorHex: String) {
     Surface(
         modifier = Modifier.padding(end = 8.dp, bottom = 8.dp),
         elevation = 8.dp,
         shape = RoundedCornerShape(4.dp),
-        color = colorResource(color)
+        color = Color(colorHex.toColorInt())
     ) {
-        Text(text = text)
+        Text(
+            modifier = Modifier.padding(horizontal = 8.dp),
+            text = text
+        )
     }
 }
 
@@ -236,5 +335,5 @@ fun PokedexPreview() {
 @Preview
 @Composable
 fun ChipPreview() {
-    Chip(text = "Grass", color = R.color.teal_700)
+    Chip(text = "Grass", colorHex = "#FF0000")
 }
