@@ -1,7 +1,6 @@
 package dev.multidex.android
 
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.Image
@@ -21,35 +20,23 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
 import coil.compose.rememberImagePainter
-import dev.multidex.pokemodel.AbbreviatedPokemonResults
+import dev.multidex.clientrepository.Response
+import dev.multidex.clientrepository.pokemon.PokemonRepository
 import dev.multidex.pokemodel.Pokemon
 import dev.multidex.pokemodel.PokemonType
-import io.ktor.client.*
-import io.ktor.client.engine.cio.*
-import io.ktor.client.features.json.*
-import io.ktor.client.features.json.serializer.*
-import io.ktor.client.request.*
-import kotlinx.coroutines.async
-import kotlinx.coroutines.coroutineScope
 import java.util.*
 
 class MainActivity : ComponentActivity() {
-    private val client = HttpClient(CIO) {
-        install(JsonFeature) {
-            serializer = KotlinxSerializer(kotlinx.serialization.json.Json {
-                prettyPrint = true
-                ignoreUnknownKeys = true
-            })
-        }
-    }
+
+    private val pokemonRepository = PokemonRepository()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenCreated {
-            val response = client.downloadPokemon()
+            val response = pokemonRepository.retrieve() as Response.Success<List<Pokemon>>
             setContent {
                 LazyColumn {
-                    items(response) { pokemon ->
+                    items(response.result) { pokemon ->
                         val types = pokemon.types.map { PokemonType.from(it) }
                         PokedexItem(
                             image = pokemon.sprites.other.officialArtwork.frontDefault,
@@ -62,28 +49,6 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
-}
-
-private suspend fun HttpClient.downloadPokemon(): List<Pokemon> {
-    val networkTag = "Network"
-    val pokemonToRetrieveRequest = "https://pokeapi.co/api/v2/pokemon/?limit=10"
-    Log.d(networkTag, "request: $pokemonToRetrieveRequest")
-    val pokemonToRetrieve =
-        get<AbbreviatedPokemonResults>(urlString = pokemonToRetrieveRequest)
-    Log.d(networkTag, "result: $pokemonToRetrieve")
-    val requests = pokemonToRetrieve.results.map { abbreviatedPokemon ->
-        coroutineScope {
-            async {
-                Log.d(networkTag, "request: ${abbreviatedPokemon.url}")
-                get<Pokemon>(
-                    abbreviatedPokemon.url
-                ).also { Log.d(networkTag, "result: $it") }
-            }
-        }
-    }
-
-    return requests.map { it.await() }
-        .sortedBy { it.order }
 }
 
 @Composable

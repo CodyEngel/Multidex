@@ -71,10 +71,11 @@ dependencies {
     }
 
     with(Deps.Ktor) {
-        implementation(client)
+        implementation(clientCore)
         implementation(clientSerialization)
         implementation(engineCio)
     }
 
+    implementation(project(":clientRepository"))
     implementation(project(":pokeModel"))
 }

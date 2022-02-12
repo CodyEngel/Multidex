@@ -52,7 +52,8 @@ object Deps {
     }
 
     object Ktor {
-        const val client = "io.ktor:ktor-client-core:${Versions.ktor}"
+        const val clientCore = "io.ktor:ktor-client-core:${Versions.ktor}"
+        const val clientLogging ="io.ktor:ktor-client-logging:${Versions.ktor}"
         const val clientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
         const val engineCio = "io.ktor:ktor-client-cio:${Versions.ktor}"
     }
