@@ -11,7 +11,7 @@ android {
         minSdk = Versions.androidMinSdk
         targetSdk = Versions.androidTargetSdk
         versionCode = 1
-        versionName = "0.1"
+        versionName = ApplicationVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         testInstrumentationRunnerArguments += mapOf(
@@ -75,4 +75,6 @@ dependencies {
         implementation(clientSerialization)
         implementation(engineCio)
     }
+
+    implementation(project(":pokeModel"))
 }

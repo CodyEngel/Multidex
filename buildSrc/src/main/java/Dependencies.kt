@@ -1,3 +1,5 @@
+const val ApplicationVersion = "0.0.1"
+
 object Versions {
     const val activityCompose = "1.4.0-beta01"
     const val androidCompileSdk = 31
@@ -9,6 +11,7 @@ object Versions {
     const val composeCompiler = "1.1.0-rc02"
 
     const val kmpNativeCoroutinesVersion = "0.11.1-new-mm"
+    const val kotlinxSerialization = "1.3.2"
     const val ktor = "1.6.7"
 
     const val shadow = "7.0.0"
@@ -42,6 +45,10 @@ object Deps {
         const val shadow = "gradle.plugin.com.github.jengelman.gradle.plugins:shadow:${Versions.shadow}"
         const val sqlDelight = "com.squareup.sqldelight:gradle-plugin:${Versions.sqlDelight}"
         const val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersionsPlugin}"
+    }
+
+    object Kotlinx {
+        const val serialization = "org.jetbrains.kotlinx:kotlinx-serialization-json:${Versions.kotlinxSerialization}"
     }
 
     object Ktor {

@@ -21,6 +21,9 @@ import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
 import coil.compose.rememberImagePainter
+import dev.multidex.pokemodel.AbbreviatedPokemonResults
+import dev.multidex.pokemodel.Pokemon
+import dev.multidex.pokemodel.PokemonType
 import io.ktor.client.*
 import io.ktor.client.engine.cio.*
 import io.ktor.client.features.json.*
@@ -28,8 +31,6 @@ import io.ktor.client.features.json.serializer.*
 import io.ktor.client.request.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
-import kotlinx.serialization.SerialName
-import kotlinx.serialization.Serializable
 import java.util.*
 
 class MainActivity : ComponentActivity() {
@@ -83,196 +84,6 @@ private suspend fun HttpClient.downloadPokemon(): List<Pokemon> {
 
     return requests.map { it.await() }
         .sortedBy { it.order }
-}
-
-@Serializable
-data class AbbreviatedPokemonResults(
-    val results: List<AbbreviatedPokemon>
-)
-
-@Serializable
-data class AbbreviatedPokemon(
-    val name: String,
-    val url: String
-)
-
-@Serializable
-data class Pokemon(
-    @SerialName("base_experience")
-    val baseExperience: Int,
-    val height: Int,
-    @SerialName("is_default")
-    val isDefault: Boolean,
-    val name: String,
-    val order: Int, // entry
-    val sprites: Sprites,
-    val types: List<PokemonTypeJson>,
-    val weight: Int
-)
-
-fun Sprites.asList(): List<Sprite> {
-    val officialArtWorkFrontDefault =
-        Sprite.Other.OfficialArtwork.FrontDefault(other.officialArtwork.frontDefault)
-    return listOf(officialArtWorkFrontDefault)
-}
-
-@Serializable
-data class PokemonTypeJson(
-    val slot: Int,
-    val type: PokemonTypeDetailsJson
-)
-
-@Serializable
-data class PokemonTypeDetailsJson(
-    val name: String,
-    val url: String
-)
-
-@Serializable
-data class Sprites(
-    @SerialName("back_default")
-    val backDefault: String,
-    @SerialName("front_default")
-    val frontDefault: String,
-    val other: SpriteOtherJson,
-)
-
-@Serializable
-data class SpriteOtherJson(
-    @SerialName("official-artwork")
-    val officialArtwork: SpriteOtherOfficialArtwork
-)
-
-@Serializable
-data class SpriteOtherOfficialArtwork(
-    @SerialName("front_default")
-    val frontDefault: String
-)
-
-sealed class Sprite {
-    abstract val url: String
-
-    sealed class Other : Sprite() {
-
-        sealed class OfficialArtwork : Other() {
-            data class FrontDefault(override val url: String) : Other()
-        }
-    }
-}
-
-enum class PokemonType(val text: String, val colorHex: String) {
-    NORMAL(
-        text = "Normal",
-        colorHex = "#A8A77A"
-    ),
-    FIGHTING(
-        text = "Fighting",
-        colorHex = "#C22E28"
-    ),
-    FLYING(
-        text = "Flying",
-        colorHex = "#A98FF3"
-    ),
-    POISON(
-        text = "Poison",
-        colorHex = "#A33EA1"
-    ),
-    GROUND(
-        text = "Ground",
-        colorHex = "#E2BF65"
-    ),
-    ROCK(
-        text = "Rock",
-        colorHex = "#B6A136"
-    ),
-    BUG(
-        text = "Bug",
-        colorHex = "#A6B91A"
-    ),
-    GHOST(
-        text = "Ghost",
-        colorHex = "#735797"
-    ),
-    STEEL(
-        text = "Normal",
-        colorHex = "#B7B7CE"
-    ),
-    FIRE(
-        text = "Fire",
-        colorHex = "#EE8130"
-    ),
-    WATER(
-        text = "Water",
-        colorHex = "#6390F0"
-    ),
-    GRASS(
-        text = "Grass",
-        colorHex = "#7AC74C"
-    ),
-    ELECTRIC(
-        text = "Electric",
-        colorHex = "#F7D02C"
-    ),
-    PSYCHIC(
-        text = "Psychic",
-        colorHex = "#F95587"
-    ),
-    ICE(
-        text = "Ice",
-        colorHex = "#96D9D6"
-    ),
-    DRAGON(
-        text = "Dragon",
-        colorHex = "#6F35FC"
-    ),
-    DARK(
-        text = "Dark",
-        colorHex = "#705746"
-    ),
-    FAIRY(
-        text = "Fairy",
-        colorHex = "#D685AD"
-    ),
-    UNKNOWN(
-        text = "Unknown",
-        colorHex = "#000000"
-    ),
-    SHADOW(
-        text = "Shadow",
-        colorHex = "#222222"
-    ),
-    NOT_FOUND(
-        text = "Not Found",
-        colorHex = "#000000"
-    );
-
-    companion object {
-        fun from(json: PokemonTypeJson): PokemonType {
-            return when (json.type.name.lowercase(Locale.US)) {
-                "normal" -> NORMAL
-                "fighting" -> FIGHTING
-                "flying" -> FLYING
-                "poison" -> POISON
-                "ground" -> GROUND
-                "rock" -> ROCK
-                "bug" -> BUG
-                "ghost" -> GHOST
-                "steel" -> STEEL
-                "fire" -> FIRE
-                "water" -> WATER
-                "grass" -> GRASS
-                "electric" -> ELECTRIC
-                "psychic" -> PSYCHIC
-                "ice" -> ICE
-                "dragon" -> DRAGON
-                "dark" -> DARK
-                "fairy" -> FAIRY
-                "unknown" -> UNKNOWN
-                "shadow" -> SHADOW
-                else -> NOT_FOUND
-            }
-        }
-    }
 }
 
 @Composable
