@@ -5,6 +5,7 @@ object Versions {
     const val androidCompileSdk = 31
     const val androidMinSdk = 23
     const val androidTargetSdk = androidCompileSdk
+    const val androidxNavigation = "2.4.1"
     const val appCompat = "1.4.1"
     const val coil = "1.4.0"
     const val compose = "1.1.0-rc01"
@@ -24,6 +25,7 @@ object Deps {
     object Android {
         const val appCompat = "androidx.appcompat:appcompat:${Versions.appCompat}"
         const val activityCompose = "androidx.activity:activity-compose:${Versions.activityCompose}"
+        const val navigation = "androidx.navigation:navigation-compose:${Versions.androidxNavigation}"
     }
 
     object Coil {

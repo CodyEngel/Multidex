@@ -52,6 +52,7 @@ dependencies {
     with(Deps.Android) {
         implementation(activityCompose)
         implementation(appCompat)
+        implementation(navigation)
     }
 
     with(Deps.Coil) {

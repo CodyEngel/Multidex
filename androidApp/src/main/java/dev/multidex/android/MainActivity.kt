@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
+import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,6 +20,10 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.core.graphics.toColorInt
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavController
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import dev.multidex.clientrepository.Response
 import dev.multidex.clientrepository.pokemon.PokemonRepository
@@ -35,28 +40,40 @@ class MainActivity : ComponentActivity() {
         lifecycleScope.launchWhenCreated {
             val response = pokemonRepository.retrieve() as Response.Success<List<Pokemon>>
             setContent {
-                LazyColumn {
-                    items(response.result) { pokemon ->
-                        val types = pokemon.types.map { PokemonType.from(it) }
-                        PokedexItem(
-                            image = pokemon.sprites.other.officialArtwork.frontDefault,
-                            name = pokemon.name.replaceFirstChar { it.uppercase(Locale.US) },
-                            entry = pokemon.order,
-                            types = types
-                        )
+                val navController = rememberNavController()
+                val navHost =
+                    NavHost(navController = navController, startDestination = "pokemonList") {
+                        composable("pokemonList") {
+                            LazyColumn {
+                                items(response.result) { pokemon ->
+                                    val types = pokemon.types.map { PokemonType.from(it) }
+                                    PokedexItem(
+                                        image = pokemon.sprites.other.officialArtwork.frontDefault,
+                                        name = pokemon.name.replaceFirstChar { it.uppercase(Locale.US) },
+                                        entry = pokemon.order,
+                                        types = types,
+                                        navController = navController
+                                    )
+                                }
+                            }
+                        }
+                        composable("pokemon/{pokemonId}") { entry ->
+                            Text(text = "Hello, ${entry.arguments?.get("pokemonId")}")
+                        }
                     }
-                }
             }
         }
     }
 }
 
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PokedexItem(
     image: String,
     name: String,
     entry: Int,
-    types: List<PokemonType>
+    types: List<PokemonType>,
+    navController: NavController
 ) {
     Card(
         shape = RoundedCornerShape(size = 4.dp),
@@ -64,6 +81,7 @@ fun PokedexItem(
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 16.dp)
             .shadow(elevation = 4.dp, RoundedCornerShape(size = 4.dp)),
+        onClick = { navController.navigate("pokemon/123") }
     ) {
         Row {
             Image(
@@ -104,7 +122,8 @@ fun PokedexPreview() {
         image = "https://www.example.com/image.jpg",
         name = "Bulbasaur",
         entry = 1,
-        types = listOf(PokemonType.GRASS)
+        types = listOf(PokemonType.GRASS),
+        navController = rememberNavController()
     )
 }
 
