@@ -21,7 +21,8 @@ fun Chip(text: String, colorHex: String) {
     ) {
         Text(
             modifier = Modifier.padding(horizontal = 8.dp),
-            text = text
+            text = text,
+            color = if (colorHex.luminance == Luminance.LIGHT) Color.Black else Color.White
         )
     }
 }
