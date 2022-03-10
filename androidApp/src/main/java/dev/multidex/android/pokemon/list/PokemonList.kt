@@ -8,7 +8,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.tooling.preview.Preview
@@ -17,9 +17,26 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import dev.multidex.android.common.view.Chip
+import dev.multidex.clientrepository.Response
+import dev.multidex.clientrepository.pokemon.PokemonRepository
 import dev.multidex.pokemodel.Pokemon
 import dev.multidex.pokemodel.PokemonType
+import kotlinx.coroutines.launch
 import java.util.*
+
+@Composable
+fun PokemonListScreen(navController: NavController) {
+    var state by remember { mutableStateOf(listOf<Pokemon>()) }
+    LaunchedEffect("no-key") {
+        launch {
+            val pokemonRepository = PokemonRepository()
+            val response = pokemonRepository.retrieve() as Response.Success<List<Pokemon>>
+            state = response.result
+        }
+    }
+
+    PokemonList(pokemons = state, navController = navController)
+}
 
 @Composable
 fun PokemonList(pokemons: List<Pokemon>, navController: NavController) {
@@ -70,7 +87,6 @@ fun PokedexItem(
         }
     }
 }
-
 
 @Preview
 @Composable
