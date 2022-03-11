@@ -11,7 +11,7 @@ import dev.multidex.android.pokemon.details.PokemonDetailsScreen
 import dev.multidex.android.pokemon.list.PokemonListScreen
 
 class MainActivity : ComponentActivity() {
-    
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenCreated {
@@ -22,7 +22,8 @@ class MainActivity : ComponentActivity() {
                         PokemonListScreen(navController = navController)
                     }
                     composable("pokemon/{pokemonId}") { entry ->
-                        entry.arguments?.getInt("pokemonId")?.let { PokemonDetailsScreen(it) }
+                        entry.arguments?.getString("pokemonId")
+                            ?.let { PokemonDetailsScreen(it.toInt()) }
                             ?: throw IllegalStateException("Pokemon ID Not Available")
                     }
                 }

@@ -3,6 +3,7 @@ package dev.multidex.clientrepository.pokemon
 import dev.multidex.clientrepository.DefaultHttpClient
 import dev.multidex.clientrepository.Repository
 import dev.multidex.clientrepository.Response
+import dev.multidex.clientrepository.RetrieveAllQuery
 import dev.multidex.pokemodel.AbbreviatedPokemonResults
 import dev.multidex.pokemodel.Pokemon
 import io.ktor.client.*
@@ -11,8 +12,12 @@ import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
 
 class PokemonRepository(private val client: HttpClient = DefaultHttpClient) :
-    Repository<List<Pokemon>> {
-    override suspend fun retrieve(): Response<List<Pokemon>> {
+    Repository<List<Pokemon>, RetrieveAllQuery> {
+    suspend fun retrieve(): Response<List<Pokemon>> {
+        return retrieve(RetrieveAllQuery)
+    }
+
+    override suspend fun retrieve(query: RetrieveAllQuery): Response<List<Pokemon>> {
         return Response.Success(client.downloadPokemon())
     }
 }

@@ -27,7 +27,7 @@ import java.util.*
 @Composable
 fun PokemonListScreen(navController: NavController) {
     var state by remember { mutableStateOf(listOf<Pokemon>()) }
-    LaunchedEffect("no-key") {
+    LaunchedEffect(key1 = "no-key") {
         launch {
             val pokemonRepository = PokemonRepository()
             val response = pokemonRepository.retrieve() as Response.Success<List<Pokemon>>
@@ -44,9 +44,10 @@ fun PokemonList(pokemons: List<Pokemon>, navController: NavController) {
         items(pokemons) { pokemon ->
             val types = pokemon.types.map { PokemonType.from(it) }
             PokedexItem(
+                id = pokemon.id,
                 image = pokemon.sprites.other.officialArtwork.frontDefault,
                 name = pokemon.name.replaceFirstChar { it.uppercase(Locale.US) },
-                entry = pokemon.order,
+                entry = pokemon.id,
                 types = types,
                 navController = navController
             )
@@ -57,6 +58,7 @@ fun PokemonList(pokemons: List<Pokemon>, navController: NavController) {
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun PokedexItem(
+    id: Int,
     image: String,
     name: String,
     entry: Int,
@@ -69,7 +71,7 @@ fun PokedexItem(
             .fillMaxWidth()
             .padding(vertical = 8.dp, horizontal = 16.dp)
             .shadow(elevation = 4.dp, RoundedCornerShape(size = 4.dp)),
-        onClick = { navController.navigate("pokemon/123") }
+        onClick = { navController.navigate("pokemon/$id") }
     ) {
         Row {
             Image(
@@ -92,6 +94,7 @@ fun PokedexItem(
 @Composable
 fun PokedexPreview() {
     PokedexItem(
+        id = 1,
         image = "https://www.example.com/image.jpg",
         name = "Bulbasaur",
         entry = 1,
