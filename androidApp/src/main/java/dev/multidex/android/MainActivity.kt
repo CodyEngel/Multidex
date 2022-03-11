@@ -9,12 +9,9 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import dev.multidex.android.pokemon.details.PokemonDetailsScreen
 import dev.multidex.android.pokemon.list.PokemonListScreen
-import dev.multidex.clientrepository.pokemon.PokemonRepository
 
 class MainActivity : ComponentActivity() {
-
-    private val pokemonRepository = PokemonRepository()
-
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         lifecycleScope.launchWhenCreated {
