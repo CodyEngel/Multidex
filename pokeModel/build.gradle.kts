@@ -34,4 +34,5 @@ android {
         minSdk = Versions.androidMinSdk
         targetSdk = Versions.androidTargetSdk
     }
+    namespace = "dev.multidex.pokemodel"
 }

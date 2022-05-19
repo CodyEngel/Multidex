@@ -50,4 +50,5 @@ android {
         minSdk = Versions.androidMinSdk
         targetSdk = Versions.androidTargetSdk
     }
+    namespace = "dev.multidex.clientrepository"
 }

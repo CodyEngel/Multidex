@@ -7,6 +7,7 @@ plugins {
 android {
     compileSdk = Versions.androidCompileSdk
     defaultConfig {
+        testInstrumentationRunnerArguments += mapOf("clearPackageData" to "true")
         applicationId = "dev.multidex.android"
         minSdk = Versions.androidMinSdk
         targetSdk = Versions.androidTargetSdk
@@ -14,9 +15,6 @@ android {
         versionName = ApplicationVersion
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
-        testInstrumentationRunnerArguments += mapOf(
-            "clearPackageData" to "true"
-        )
     }
     buildFeatures {
         compose = true
@@ -46,6 +44,7 @@ android {
             excludes += "/META-INF/{AL2.0,LGPL2.1}"
         }
     }
+    namespace = "dev.multidex.android"
 }
 
 dependencies {
