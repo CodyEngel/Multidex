@@ -9,7 +9,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberImagePainter
+import coil.compose.rememberAsyncImagePainter
 import dev.multidex.android.common.view.Chip
 import dev.multidex.clientrepository.Response
 import dev.multidex.clientrepository.pokemon.PokemonDetailsRepository
@@ -44,7 +44,7 @@ private fun PokemonDetailsReady(pokemon: Pokemon) {
     val types = pokemon.types.map { PokemonType.from(it) }
     Row {
         Image(
-            painter = rememberImagePainter(data = image),
+            painter = rememberAsyncImagePainter(model = image),
             contentDescription = null,
             modifier = Modifier.size(128.dp)
         )
@@ -59,7 +59,7 @@ private fun PokemonDetailsReady(pokemon: Pokemon) {
 }
 
 sealed class PokemonDetailsState {
-    object Loading : PokemonDetailsState()
+    data object Loading : PokemonDetailsState()
 
     data class Ready(val pokemon: Pokemon) : PokemonDetailsState()
 }
