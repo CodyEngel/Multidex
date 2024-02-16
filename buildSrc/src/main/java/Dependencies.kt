@@ -13,7 +13,7 @@ object Versions {
 
     const val kmpNativeCoroutinesVersion = "0.11.1-new-mm"
     const val kotlinxSerialization = "1.6.2"
-    const val ktor = "1.6.7"
+    const val ktor = "2.0.0"
 
     const val shadow = "8.1.1"
     const val sqlDelight = "2.0.1"
@@ -55,8 +55,9 @@ object Deps {
 
     object Ktor {
         const val clientCore = "io.ktor:ktor-client-core:${Versions.ktor}"
-        const val clientLogging ="io.ktor:ktor-client-logging:${Versions.ktor}"
-        const val clientSerialization = "io.ktor:ktor-client-serialization:${Versions.ktor}"
+        const val clientLogging = "io.ktor:ktor-client-logging:${Versions.ktor}"
+        const val contentNegotiation = "io.ktor:ktor-client-content-negotiation:${Versions.ktor}"
+        const val jsonSerialization = "io.ktor:ktor-serialization-kotlinx-json:${Versions.ktor}"
         const val engineCio = "io.ktor:ktor-client-cio:${Versions.ktor}"
     }
 }

@@ -7,6 +7,7 @@ import dev.multidex.clientrepository.RetrieveAllQuery
 import dev.multidex.pokemodel.AbbreviatedPokemonResults
 import dev.multidex.pokemodel.Pokemon
 import io.ktor.client.*
+import io.ktor.client.call.body
 import io.ktor.client.request.*
 import kotlinx.coroutines.async
 import kotlinx.coroutines.coroutineScope
@@ -25,13 +26,11 @@ class PokemonRepository(private val client: HttpClient = DefaultHttpClient) :
 private suspend fun HttpClient.downloadPokemon(): List<Pokemon> {
     val pokemonToRetrieveRequest = "https://pokeapi.co/api/v2/pokemon/?limit=10"
     val pokemonToRetrieve =
-        get<AbbreviatedPokemonResults>(urlString = pokemonToRetrieveRequest)
+        get(urlString = pokemonToRetrieveRequest).body<AbbreviatedPokemonResults>()
     val requests = pokemonToRetrieve.results.map { abbreviatedPokemon ->
         coroutineScope {
             async {
-                get<Pokemon>(
-                    abbreviatedPokemon.url
-                )
+                get(abbreviatedPokemon.url).body<Pokemon>()
             }
         }
     }
