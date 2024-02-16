@@ -13,7 +13,7 @@ object Versions {
 
     const val kmpNativeCoroutinesVersion = "0.11.1-new-mm"
     const val kotlinxSerialization = "1.6.2"
-    const val ktor = "2.0.0"
+    const val ktor = "2.3.8"
 
     const val shadow = "8.1.1"
     const val sqlDelight = "2.0.1"
