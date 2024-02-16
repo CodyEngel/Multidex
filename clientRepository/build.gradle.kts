@@ -7,7 +7,7 @@ plugins {
 version = ApplicationVersion
 
 kotlin {
-    android()
+    androidTarget()
 
     sourceSets {
         val commonMain by getting {
@@ -34,7 +34,7 @@ kotlin {
                 }
             }
         }
-        val androidTest by getting {
+        val androidUnitTest by getting {
             dependencies {
                 implementation(kotlin("test-junit"))
                 implementation("junit:junit:4.13.2")
@@ -51,4 +51,8 @@ android {
         targetSdk = Versions.androidTargetSdk
     }
     namespace = "dev.multidex.clientrepository"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 }

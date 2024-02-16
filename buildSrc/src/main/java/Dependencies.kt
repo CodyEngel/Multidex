@@ -1,24 +1,24 @@
 const val ApplicationVersion = "0.0.1"
 
 object Versions {
-    const val activityCompose = "1.4.0-beta01"
-    const val androidCompileSdk = 31
+    const val activityCompose = "1.8.2"
+    const val androidCompileSdk = 34
     const val androidMinSdk = 23
     const val androidTargetSdk = androidCompileSdk
-    const val androidxNavigation = "2.4.1"
-    const val appCompat = "1.4.1"
-    const val coil = "1.4.0"
-    const val compose = "1.1.0-rc01"
-    const val composeCompiler = "1.1.0-rc02"
+    const val androidxNavigation = "2.7.7"
+    const val appCompat = "1.6.1"
+    const val coil = "2.5.0"
+    const val compose = "1.6.1"
+    const val composeCompiler = "1.5.9"
 
     const val kmpNativeCoroutinesVersion = "0.11.1-new-mm"
-    const val kotlinxSerialization = "1.3.2"
+    const val kotlinxSerialization = "1.6.2"
     const val ktor = "1.6.7"
 
-    const val shadow = "7.0.0"
-    const val sqlDelight = "1.5.3"
+    const val shadow = "8.1.1"
+    const val sqlDelight = "2.0.1"
 
-    const val gradleVersionsPlugin = "0.39.0"
+    const val gradleVersionsPlugin = "0.51.0"
 }
 
 object Deps {
@@ -44,8 +44,8 @@ object Deps {
     }
 
     object Gradle {
-        const val shadow = "gradle.plugin.com.github.jengelman.gradle.plugins:shadow:${Versions.shadow}"
-        const val sqlDelight = "com.squareup.sqldelight:gradle-plugin:${Versions.sqlDelight}"
+        const val shadow = "com.github.johnrengelman:shadow:${Versions.shadow}"
+        const val sqlDelight = "app.cash.sqldelight:gradle-plugin:${Versions.sqlDelight}"
         const val gradleVersionsPlugin = "com.github.ben-manes:gradle-versions-plugin:${Versions.gradleVersionsPlugin}"
     }
 

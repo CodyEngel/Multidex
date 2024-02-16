@@ -7,8 +7,8 @@ plugins {
 version = ApplicationVersion
 
 kotlin {
-    android()
-    
+    androidTarget()
+
     sourceSets {
         val commonMain by getting {
             dependencies {
@@ -35,4 +35,8 @@ android {
         targetSdk = Versions.androidTargetSdk
     }
     namespace = "dev.multidex.pokemodel"
+    compileOptions {
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
+    }
 }
