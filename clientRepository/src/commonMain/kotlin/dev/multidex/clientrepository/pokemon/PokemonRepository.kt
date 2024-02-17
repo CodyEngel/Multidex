@@ -24,7 +24,7 @@ class PokemonRepository(private val client: HttpClient = DefaultHttpClient) :
 }
 
 private suspend fun HttpClient.downloadPokemon(): List<Pokemon> {
-    val pokemonToRetrieveRequest = "https://pokeapi.co/api/v2/pokemon/?limit=10"
+    val pokemonToRetrieveRequest = "https://pokeapi.co/api/v2/pokemon/?limit=1"
     val pokemonToRetrieve =
         get(urlString = pokemonToRetrieveRequest).body<AbbreviatedPokemonResults>()
     val requests = pokemonToRetrieve.results.map { abbreviatedPokemon ->
